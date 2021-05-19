@@ -1,0 +1,283 @@
+openapi: "3.0.0"
+info:
+  description: API Reference
+  version: 1.0.0
+  title: Python Flask RESTful API | Food and TDEE API 
+servers:
+  - url: http://localhost:5000
+paths:
+  /authentication/token:
+    post:
+      tags:
+        - Authentication
+      summary: Authentication
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OAuthError"
+        '204':
+          description: Username or Password not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OAuthError"
+  /foods:
+    get:
+      tags:
+        - Food API
+      summary: Food API
+      parameters:
+      - name: Food
+        in: query
+        description: Food name
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation search name
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/foodSchemas"
+        '204':
+          description: Food name not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: not found
+    post:
+      tags:
+        - Food API
+      summary: Food API create food
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/foodSchemas"
+      responses:
+        '200':
+          description: Successful create food
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/foodSchemas"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Token has expired
+    put:
+      tags:
+        - Food API
+      summary: Food API Edit food
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/editFoodSchema"
+      responses:
+        '200':
+          description: Successful create food
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/foodSchemas"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Token has expired
+        '204':
+          description: Food name not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: not found
+  /foods/delete/{Food}:
+    delete:
+      tags:
+        - Food API
+      summary: Food API Delete food
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Food
+          in: path
+          description: Food name
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful create food
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/foodSchemas"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Token has expired
+        '204':
+          description: Food name not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: not found
+  /tdee:
+    get:
+      tags:
+        - TDEE Calculator
+      summary: TDEE
+      parameters:
+      - name: weight
+        in: query
+        description: weight
+        schema:
+          type: number
+          required: true
+      - name: height
+        in: query
+        description: height
+        schema:
+          type: number
+          required: true
+      - name: age
+        in: query
+        description: age
+        schema:
+          type: integer
+          required: true
+      - name: gender
+        in: query
+        description: gender
+        schema:
+          type: string
+          required: true
+          enum: [M,F]
+      - name: activity
+        in: query
+        description: activity
+        schema:
+          type: string
+          enum: [S,L,M,H,A]
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/tdeeSchemas"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Token:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+          format: int64
+        refresh_token:
+          type: string
+    OAuthError:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+    foodSchemas:
+      type: object
+      properties:
+        Name:
+          type: string
+        Serving:
+          type: string
+        Calories:
+          type: string
+    editFoodSchema:
+      type: object
+      properties:
+        key:
+          type: string
+        Name:
+          type: string
+        Serving:
+          type: string
+        Calories:
+          type: number
+    tdeeSchemas:
+      type: object
+      properties:
+        BMR:
+          type: number
+        TDEE:
+          type: number
+        

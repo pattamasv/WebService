@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>API Service</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link "  href="index.html">Food API</a>
+        <a class="nav-link" href="tdee.html">TDEE</a>
+        <a class="nav-link active" aria-current="page" href="#">Foodlist</a>
+        <a class="nav-link " href="addfood.html">Add Food</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<body>
+    <!-- <div class="main">
+      <div class="header">
+        <h1>OpenWeatherMap API</h1>
+        <p>Enter any city name in the input box below to get the data</p>
+      </div> -->
+
+    <figure class="text-center">
+    <br><br>
+      <div class="container">
+        <div class="card"> 
+         
+          <h1>Food Calories</h1>
+                <table class="table table-striped">
+                <tr  class="bg-info">
+                    <th>Food</th>
+                    <th>Calories</th>
+                    <th>Serving</th>
+                </tr>
+
+                <tbody id="myTable">
+                    
+                </tbody>
+              </table>
+        </div>
+      </div>
+
+
+    </figure>
+
+
+  <script >
+  var myArray = []
+	
+	$.ajax({
+		method:'GET',
+		url:'http://localhost:5000/foodlist',
+		success:function(response){
+			myArray = response.data_food
+			buildTable(myArray)
+			console.log(myArray)
+		}
+	})
+
+	function buildTable(data_food){
+		var table = document.getElementById('myTable')
+
+		for (var i = 0; i < data_food.length; i++){
+			var row = `<tr>
+                    <td>${data_food[i].Food}</td>
+                    <td>${data_food[i].Calories}</td>
+                    <td>${data_food[i].Serving}</td>
+					      </tr>`
+			table.innerHTML += row
+
+
+		}
+	}
+ 
+  </script>
+  </body>
+  </html>

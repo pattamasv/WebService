@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>API Service</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="bootstrap-grid.min.css" />
+
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page"  href="#">Food API</a>
+        <a class="nav-link" href="tdee.html">TDEE</a>
+        <a class="nav-link" href="foodlist.html">Foodlist</a>
+        <a class="nav-link " href="addfood.html">Add Food</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<body>
+
+  <figure class="text-center">
+    <div class="container">
+      <h1 class="display-5">Food API</h1><br>
+     
+        <div class="form-group">
+          <div class="col-auto">
+            <input type="text" placeholder="Enter Food Name" class="input_text">
+            <button type="submit" class="submit">Submit</button>
+          </div>
+        </div>
+      
+    </div>
+    <br>
+  <div class="container">
+    <div class="card"> 
+      <h1 class="display-4">Result</h1>
+      <p class="name" id="food" ></p>
+      
+    </div>
+  </div>
+  </figure>
+
+<script >
+var input = document.querySelector('.input_text');
+var main = document.querySelector('#food');
+var cals = document.querySelector('.cals');
+var serv = document.querySelector('.serv');
+var button= document.querySelector('.submit');
+
+button.addEventListener('click', function(Food){
+fetch('http://localhost:5000/foods?Food='+input.value)
+.then(response => response.json())
+.then(data => {
+  var nameValue = data['Food'];
+  var calsValue = data['Calories']
+  var servValue = data['Serving']
+
+  main.innerHTML = nameValue+" : "+calsValue+" / "+servValue;
+
+
+  input.value ="";
+
+})
+
+.catch(err => alert(err.description));
+})
+
+
+
+</script>
+</body>
+</html>

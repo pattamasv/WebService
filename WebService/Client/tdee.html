@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>API Service</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link " href="index.html">Food API</a>
+        <a class="nav-link active" aria-current="page" href="#">TDEE</a>
+        <a class="nav-link" href="foodlist.html">Foodlist</a>
+        <a class="nav-link " href="addfood.html">Add Food</a>
+      </div>
+    </div>
+  </div>
+</nav>
+<br>
+<body>
+  <figure class="text-center">
+    <h1 class="display-5">BMR And TDEE Calculator</h1><br>
+    <div class="input">
+      <label >Weight :</label>
+      <input type="text" placeholder="Enter Your Weight" class="weight"> <br><br>
+      <label >Height :</label>
+      <input type="text" placeholder="Enter Your Height" class="height"> <br><br>
+      <label >Age :</label>
+      <input type="text" placeholder="Enter Your Age" class="age"> <br><br>
+      <label >Gender :</label>
+      <input type="radio" id="male" name="gender" value="M">
+      <label for="male">Male</label>
+      <input type="radio" id="female"  name="gender" value="F" >
+      <label for="female">Female</label> <br><br>
+      <label >Activity : </label>
+      <input type="radio" id="sedentary"  name="activity" value="S">
+      <label for="sedentary">Sedentary</label> &nbsp
+      <input type="radio" id="light" name="activity" value="L">
+      <label for="light">Light Exercise</label> &nbsp
+      <input type="radio" id="moderate" name="activity" value="M">
+      <label for="moderate">Moderate Exercise</label> &nbsp
+      <input type="radio" id="heavy"  name="activity" value="H">
+      <label for="heavy">Heavy Exercise</label> &nbsp
+      <input type="radio" id="athlete"  name="activity" value="A">
+      <label for="athlete">Athlete</label> <br><br>
+      <input type="submit" value="Submit" class="submit">
+    </div>
+  </div>
+  <br>
+  <div class="container">
+    <div class="card">
+      <h1 class="display-4">Result</h1><br>
+      <p style="font-size: 40px" class="bmr"></p><br>
+      <p style="font-size: 40px"class="tdeee"></p>
+    </div>
+  </div>
+</figure>
+<script>
+var tdeee = document.querySelector('.tdeee');
+var bmr = document.querySelector('.bmr');
+var weight = document.querySelector('.weight');
+var height = document.querySelector('.height');
+var age = document.querySelector('.age');
+
+var gender = document.querySelector('input[name="gender"]:checked');
+var activity = document.querySelector('input[name="activity"]:checked');
+
+
+var button= document.querySelector('.submit');
+
+button.addEventListener('click', function(){
+fetch('http://localhost:5000/tdee?weight='+weight.value+'&height='+height.value+'&age='+age.value+
+'&gender='+document.querySelector('input[name="gender"]:checked').value+'&activity='+document.querySelector('input[name="activity"]:checked').value)
+.then(response => response.json())
+.then(data => {
+  var tdeeeValue = data['TDEE'];
+  var bmrValue = data['BMR']
+  
+  bmr.innerHTML = "BMR : "+bmrValue;
+  tdeee.innerHTML = "TDEE : "+tdeeeValue;
+  
+ 
+
+  weight.value ="";
+  height.value ="";
+  age.value ="";
+  gender.value ="";
+  activity.value ="";
+
+})
+
+.catch(err => alert(err.description));
+})
+
+</script>
+</body>
+</html>
